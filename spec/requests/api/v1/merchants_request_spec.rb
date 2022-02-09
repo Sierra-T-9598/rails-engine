@@ -3,7 +3,7 @@ require 'rails_helper'
 describe "Merchants API" do
   describe 'index' do
     describe 'happy path' do
-      it 'returns a list of merchants' do
+      it 'returns a json object of all merchants' do
         create_list(:merchant, 3)
 
         get api_v1_merchants_path
@@ -36,7 +36,7 @@ describe "Merchants API" do
 
   describe 'show' do
     describe 'happy path' do
-      it 'returns the merchant data corresponding with the given id' do
+      it 'returns the merchant data corresponding with the given id as a json object' do
         id = create(:merchant).id
 
         get api_v1_merchant_path(id)
@@ -67,7 +67,7 @@ describe "Merchants API" do
 
   describe "merchant's items" do
     describe 'happy path' do
-      it "returns all of the specified merchant's items" do
+      it "returns all of the specified merchant's items as a json object" do
         merchant_1 = create(:merchant)
         items_for_merchant_1 = create_list(:item, 5, merchant: merchant_1)
 
