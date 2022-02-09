@@ -58,9 +58,49 @@ describe "Merchants API" do
         no_merchant = JSON.parse(response.body, symbolize_names: true)
 
         expect(response.status).to eq(404)
-  
+
         expect(no_merchant).to have_key(:errors)
         expect(no_merchant[:errors][:exception]).to eq("Couldn't find Merchant with 'id'=1")
+      end
+    end
+  end
+
+  describe "merchant's items" do
+    describe 'happy path' do
+      it "returns all of the specified merchant's items" do
+        merchant_1 = create(:merchant)
+        items_for_merchant_1 = create_list(:item, 5, merchant: merchant_1)
+
+        merchant_2 = create(:merchant)
+        items_for_merchant_2 = create_list(:item, 3, merchant: merchant_2)
+
+        id = merchant_1.id
+
+        get api_v1_merchant_items_path(id)
+        items = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response.status).to eq(200)
+        expect(items).to have_key(:data)
+        expect(items[:data].count).to eq(5)
+
+        items[:data].each do |item|
+          expect(item[:id]).to be_a String
+          expect(item).to have_key(:attributes)
+          expect(item[:attributes][:name]).to be_a String
+          expect(item[:attributes][:description]).to be_a String
+          expect(item[:attributes][:unit_price]).to be_a Float
+          expect(item[:attributes][:merchant_id]).to be_an Integer
+        end
+      end
+
+      describe 'sad path' do
+        it 'returns a 404 status if no items are listed because no merchant is found' do
+          get api_v1_merchant_items_path(1)
+
+          expect(response.status).to eq(404)
+          expect(JSON.parse(response.body, symbolize_names: true)).to have_key(:errors)
+          expect(JSON.parse(response.body, symbolize_names: true)[:errors][:exception]).to eq("Couldn't find Merchant with 'id'=1")
+        end
       end
     end
   end
