@@ -70,4 +70,164 @@ RSpec.describe "Items API" do
       end
     end
   end
+
+  describe 'create' do
+    describe 'happy path' do
+      it 'returns the newly created item as a json object' do
+        merchant_id = create(:merchant).id
+        item_params = ({
+                  name: 'Pen',
+                  description: 'Writes cool things',
+                  unit_price: 500.0,
+                  merchant_id: merchant_id,
+                })
+        headers = {"CONTENT_TYPE" => "application/json"}
+        post api_v1_items_path, headers: headers, params: JSON.generate(item: item_params)
+        created_item = Item.last
+
+        expect(response.status).to eq(201)
+        expect(created_item.name).to eq(item_params[:name])
+        expect(created_item.description).to eq(item_params[:description])
+        expect(created_item.unit_price).to eq(item_params[:unit_price])
+        expect(created_item.merchant_id).to eq(item_params[:merchant_id])
+      end
+    end
+
+    describe 'sad path' do
+      it 'does not create the new object if any attributes are missing and returns an error' do
+        merchant_id = create(:merchant).id
+        item_params = ({
+                  name: 'Pen',
+                  description: 'Writes cool things',
+                  merchant_id: merchant_id,
+                })
+        headers = {"CONTENT_TYPE" => "application/json"}
+        post api_v1_items_path, headers: headers, params: JSON.generate(item: item_params)
+
+        expect(response.status).to eq(400)
+      end
+
+      it 'ignores attributes that are not permitted' do
+        merchant_id = create(:merchant).id
+        item_params = ({
+                  name: 'Pen',
+                  description: 'Writes cool things',
+                  unit_price: 500.0,
+                  merchant_id: merchant_id,
+                  non_permitted_attribute: 'dkjsfhskrjgbskj!!!'
+                })
+        headers = {"CONTENT_TYPE" => "application/json"}
+        post api_v1_items_path, headers: headers, params: JSON.generate(item: item_params)
+        item = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response.status).to eq(201)
+        expect(item[:data][:attributes]).to_not have_key(:non_permitted_attribute)
+      end
+    end
+  end
+
+  describe 'update' do
+    describe 'happy path' do
+      it 'can update an existing item object when given id' do
+        id = create(:item).id
+        previous_name = Item.last.name
+        item_params = { name: "New Name" }
+        headers = {"CONTENT_TYPE" => "application/json"}
+
+        patch api_v1_item_path(id), headers: headers, params: JSON.generate({item: item_params})
+        item = Item.find_by(id: id)
+
+        expect(response.status).to eq(200)
+        expect(item.name).to_not eq(previous_name)
+        expect(item.name).to eq("New Name")
+        expect(item.description).to eq(Item.last.description)
+        expect(item.unit_price).to eq(Item.last.unit_price)
+        expect(item.merchant_id).to eq(Item.last.merchant_id)
+
+        json_item = JSON.parse(response.body, symbolize_names: true)
+
+        expect(json_item[:data][:attributes][:name]).to be_a String
+        expect(json_item[:data][:attributes][:description]).to be_a String
+        expect(json_item[:data][:attributes][:unit_price]).to be_a Float
+        expect(json_item[:data][:attributes][:merchant_id]).to be_an Integer
+      end
+    end
+  end
+
+    describe 'sad path' do
+      it 'returns the same item if no updates are provided' do
+        id = create(:item).id
+        previous_name = Item.last.name
+        headers = { 'CONTENT_TYPE' => 'application/json' }
+        patch api_v1_item_path(id), headers: headers, params: JSON.generate({item: { name: Item.last.name }})
+        item = Item.find_by(id: id)
+
+        expect(response.status).to eq(200)
+        expect(item.name).to eq(previous_name)
+      end
+
+      it 'ignores attributes that are not permitted' do
+        id = create(:item).id
+        previous_name = Item.last.name
+        item_params = ({
+                  name: 'Pen',
+                  description: 'Writes cool things',
+                  unit_price: 500.0,
+                  non_permitted_attribute: 'dkjsfhskrjgbskj!!!'
+                })
+        headers = { 'CONTENT_TYPE' => 'application/json' }
+        patch api_v1_item_path(id), headers: headers, params: JSON.generate({item: item_params })
+        item = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response.status).to eq(200)
+        expect(item[:data][:attributes]).to_not have_key(:non_permitted_attribute)
+        expect(item[:data][:attributes]).to have_key(:merchant_id)
+      end
+
+      it 'errors if item cannot be found by id to udpate' do
+        item_params = ({
+                  name: 'Pen',
+                  description: 'Writes cool things',
+                  unit_price: 500.0,
+                  merchant_id: 1,
+                })
+        headers = { 'CONTENT_TYPE' => 'application/json' }
+        patch api_v1_item_path(1), headers: headers, params: JSON.generate({item: item_params })
+
+        expect(response.status).to eq(404)
+      end
+
+      it 'errors if the merchant id associated with the item to update is invalid' do
+        id = create(:item).id
+        item_params = ({
+                  name: 'Pen',
+                  description: 'Writes cool things',
+                  unit_price: 500.0,
+                  merchant_id: "10",
+                })
+        headers = { 'CONTENT_TYPE' => 'application/json' }
+        patch api_v1_item_path(id), headers: headers, params: JSON.generate({item: item_params })
+
+        expect(response.status).to eq(400)
+      end
+    end
+  end
+
+  describe 'destroy' do
+    describe 'happy path' do
+      it 'deletes the object specified by id' do
+        item_id = create(:item).id
+
+        expect{ delete api_v1_item_path(item_id) }.to change(Item, :count).by(-1)
+        expect(response.status).to eq(204)
+        expect(response.body).to eq('')
+    end
+
+    describe 'sad path' do
+      it 'cannot find the record to delete and returns an error' do
+        delete api_v1_item_path(1)
+        expect(response.status).to eq(404)
+      end
+    end
+  end
 end
