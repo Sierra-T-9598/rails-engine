@@ -12,4 +12,16 @@ RSpec.describe Merchant do
   describe 'validations' do
     it { should validate_presence_of(:name) }
   end
-end 
+
+  describe 'class methods' do
+    describe '::find_merchant_by_name' do
+      it 'returns the first merchant that matches the query alphabetically' do
+        merchant_1 = Merchant.create!(name: 'Burger Bobs')
+        merchant_2 = Merchant.create!(name: "Alfie's Burger Shack")
+        query = 'Burger'
+        
+        expect(Merchant.find_merchant_by_name(query)).to eq(merchant_2)
+      end
+    end
+  end
+end
