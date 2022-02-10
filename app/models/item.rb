@@ -8,6 +8,7 @@ class Item < ApplicationRecord
   validates_presence_of(:description)
   validates_presence_of(:unit_price)
   validates :unit_price, numericality: { greater_than: 0.0 }
+  validates :merchant_id, numericality: true
   #class methods
   def self.find_all_items_by_name(query)
     where('name ILIKE ?', "%#{query}%")

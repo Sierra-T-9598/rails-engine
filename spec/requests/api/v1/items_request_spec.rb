@@ -65,8 +65,8 @@ RSpec.describe "Items API" do
 
         expect(response.status).to eq(404)
 
-        expect(no_item).to have_key(:errors)
-        expect(no_item[:errors][:exception]).to eq("Couldn't find Item with 'id'=1")
+        expect(no_item).to have_key(:error)
+        expect(no_item[:error][:exception]).to eq("Couldn't find Item with 'id'=1")
       end
     end
   end
@@ -252,8 +252,8 @@ RSpec.describe "Items API" do
         result = JSON.parse(response.body, symbolize_names: true)
 
         expect(response.status).to eq(404)
-        expect(result).to have_key(:errors)
-        expect(result[:errors][:exception]).to eq("Couldn't find Item with 'id'=1")
+        expect(result).to have_key(:error)
+        expect(result[:error][:exception]).to eq("Couldn't find Item with 'id'=1")
       end
     end
   end

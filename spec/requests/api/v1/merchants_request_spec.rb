@@ -59,8 +59,8 @@ describe "Merchants API" do
 
         expect(response.status).to eq(404)
 
-        expect(no_merchant).to have_key(:errors)
-        expect(no_merchant[:errors][:exception]).to eq("Couldn't find Merchant with 'id'=1")
+        expect(no_merchant).to have_key(:error)
+        expect(no_merchant[:error][:exception]).to eq("Couldn't find Merchant with 'id'=1")
       end
     end
   end
@@ -98,8 +98,8 @@ describe "Merchants API" do
           get api_v1_merchant_items_path(1)
 
           expect(response.status).to eq(404)
-          expect(JSON.parse(response.body, symbolize_names: true)).to have_key(:errors)
-          expect(JSON.parse(response.body, symbolize_names: true)[:errors][:exception]).to eq("Couldn't find Merchant with 'id'=1")
+          expect(JSON.parse(response.body, symbolize_names: true)).to have_key(:error)
+          expect(JSON.parse(response.body, symbolize_names: true)[:error][:exception]).to eq("Couldn't find Merchant with 'id'=1")
         end
       end
     end
