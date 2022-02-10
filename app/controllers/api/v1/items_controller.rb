@@ -9,17 +9,13 @@ class Api::V1::ItemsController < ApplicationController
 
   def create
     item = Item.create!(item_params)
-    render json: ItemSerializer.new(item), status: 201 if item.save
+    render json: ItemSerializer.new(item), status: 201
   end
 
   def update
     item = Item.find(params[:id])
-    if Merchant.exists?(item_params[:merchant_id]) || !item_params[:merchant_id]
-      item.update(item_params)
-      render json: ItemSerializer.new(item)
-    else
-      render json: { errors: {exception: 'Merchant ID is invalid' }}, status: 400
-    end
+    item.update!(item_params)
+    render json: ItemSerializer.new(item)
   end
 
   def destroy
