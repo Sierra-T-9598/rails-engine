@@ -1,6 +1,12 @@
 class Api::V1::ItemsSearchController < ApplicationController
   def index
-    if params[:name]
+    if !params[:name] && !params[:min_price] && !params[:max_price]
+      render json: ItemSerializer.invalid_params, status: 400
+    elsif params[:name] == "" || params[:min_price] == "" || params[:max_price] == ""
+      render json: ItemSerializer.invalid_params, status: 400
+    elsif params[:name] && (params[:min_price] || params[:max_price])
+      render json: ItemSerializer.invalid_params, status: 400
+    elsif params[:name]
       items = Item.find_all_items_by_name(params[:name])
       render json: ItemSerializer.new(items)
     elsif params[:min_price] && params[:max_price]
