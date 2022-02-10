@@ -114,7 +114,7 @@ RSpec.describe 'Items Search API' do
       end
     end
 
-    describe 'sad path' do
+    describe 'sad path and edge cases' do
       it 'returns a json response of an empty array if no matches are found' do
         item_1 = create(:item, name: 'Thing 1', unit_price: 3000.0)
         item_2 = create(:item, name: 'Thing 2', unit_price: 4000.0)
@@ -130,6 +130,38 @@ RSpec.describe 'Items Search API' do
         expect(items[:data].count).to eq(0)
         expect(items[:data]).to be_an Array
         expect(items[:data]).to eq([])
+      end
+
+      it 'returns a 400 error when no param is given' do
+        item_1 = create(:item, name: 'Thing 1', unit_price: 3000.0)
+        item_2 = create(:item, name: 'Thing 2', unit_price: 4000.0)
+        item_3 = create(:item, name: 'Thing 3', unit_price: 5000.0)
+        item_4 = create(:item, name: 'Thing 4', unit_price: 4500.0)
+
+        get "/api/v1/items/find_all"
+        expect(response.status).to eq(400)
+      end
+
+      it 'returns a 400 error when fragment for param is left empty' do
+        item_1 = create(:item, name: 'Thing 1', unit_price: 3000.0)
+        item_2 = create(:item, name: 'Thing 2', unit_price: 4000.0)
+        item_3 = create(:item, name: 'Thing 3', unit_price: 5000.0)
+        item_4 = create(:item, name: 'Thing 4', unit_price: 4500.0)
+
+        get "/api/v1/items/find_all?min_price="
+        expect(response.status).to eq(400)
+      end
+
+      it 'returns a 400 error if user puts in both name params and price params' do
+        item_1 = create(:item, name: 'Thing 1', unit_price: 3000.0)
+        item_2 = create(:item, name: 'Thing 2', unit_price: 4000.0)
+        item_3 = create(:item, name: 'Thing 3', unit_price: 5000.0)
+        item_4 = create(:item, name: 'Thing 4', unit_price: 4500.0)
+
+        min = 5000.0
+        name = "thing"
+        get "/api/v1/items/find_all?min_price=#{min}&name=#{name}"
+        expect(response.status).to eq(400)
       end
     end
   end
