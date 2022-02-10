@@ -18,7 +18,7 @@ class Api::V1::ItemsController < ApplicationController
       item.update(item_params)
       render json: ItemSerializer.new(item)
     else
-      render json: { errors: {execption: 'Merchant ID is invalid' }}, status: 400
+      render json: { errors: {exception: 'Merchant ID is invalid' }}, status: 400
     end
   end
 
