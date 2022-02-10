@@ -5,9 +5,8 @@
 ![languages](https://img.shields.io/github/languages/top/Sierra-T-9598/rails-engine?color=red)
 ![PRs](https://img.shields.io/github/issues-pr-closed/Sierra-T-9598/rails-engine)
 ![rspec](https://img.shields.io/gem/v/rspec?color=blue&label=rspec)
-![simplecov](https://img.shields.io/gem/v/simplecov?color=blue&label=simplecov) <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/contributors-4-orange.svg?style=flat)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
+![simplecov](https://img.shields.io/gem/v/simplecov?color=blue&label=simplecov) 
+
 
 One to two paragraph statement about your product and what it does.
 
@@ -81,7 +80,7 @@ Distributed under the XYZ license. See ``LICENSE`` for more information.
 [travis-url]: https://travis-ci.org/dbader/node-datadog-metrics
 [wiki]: https://github.com/yourname/yourproject/wiki
 
-
+## C
 
 
 
