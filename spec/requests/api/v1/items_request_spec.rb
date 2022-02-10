@@ -173,7 +173,7 @@ RSpec.describe "Items API" do
                   name: 'Pen',
                   description: 'Writes cool things',
                   unit_price: 500.0,
-                  non_permitted_attribute: 'dkjsfhskrjgbskj!!!'
+                  non_permitted_attribute: 'dkjsfhskrjgbskj'
                 })
         headers = { 'CONTENT_TYPE' => 'application/json' }
         patch api_v1_item_path(id), headers: headers, params: JSON.generate({item: item_params })
@@ -185,6 +185,7 @@ RSpec.describe "Items API" do
       end
 
       it 'errors if item cannot be found by id to udpate' do
+        create(:item, id: 4)
         item_params = ({
                   name: 'Pen',
                   description: 'Writes cool things',
