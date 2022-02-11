@@ -51,23 +51,23 @@ On your command line:
 
 ### Merchant Information
 
-**GET** /api/v1/merchants
+**GET** `/api/v1/merchants`
 
 Description: Get the data of all merchants
 
 ___
-**GET** /api/v1/merchants/:id
+**GET** `/api/v1/merchants/:id`
 
 Description: Get details about one merchant found by id
 
 ___
-**GET** /api/v1/merchants/:merchant_id/items
+**GET** `/api/v1/merchants/:merchant_id/items`
 
 Description: Get all items associated with a merchant
 
 ### Merchant Search
 ___
-**GET** /api/v1/merchants/find
+**GET** `/api/v1/merchants/find`
 
 Description: Search for a single merchant by name query. *Note:* The returned query will be the first match, alphabetically. 
 
@@ -81,17 +81,17 @@ Accepted Parameters:
 
 ### Item Information
 
-**GET** /api/v1/items
+**GET** `/api/v1/items`
 
 Description: Get the data of all items
 
 ___
-**GET** /api/v1/items/:id
+**GET** `/api/v1/items/:id`
 
 Description: Get details about one item found by id
 
 ___
-**POST** /api/v1/items
+**POST** `/api/v1/items`
 
 Description: Create a new item. Name, description, unit price, and merchant id are required.
 
@@ -110,19 +110,19 @@ ___
 Description: Update one or more attributes of an item
 
 ___
-**DELETE** /api/v1/items/:id
+**DELETE** `/api/v1/items/:id`
 
 Description: Delete an item
 
 ___
-**GET** /api/v1/items/:item_id/merchant
+**GET** `/api/v1/items/:item_id/merchant`
 
 Description: Get the merchant associated with an item
 
 ### Item Search
 
 ___
-**GET** /api/v1/items/find_all
+**GET** `/api/v1/items/find_all`
 
 Description: Search for all items that match search by name OR price; price filters can include min_price and/or max_price, but cannot be combined with a name query. *Note:* All queries are ordered alphabetically. 
 
