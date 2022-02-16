@@ -17,4 +17,12 @@ class ApplicationController < ActionController::API
   def render_invalid_merchant_params
     render json: MerchantSerializer.invalid_params, status: 400
   end
+
+  def render_invalid_merchant_quantity_params
+    render json: MerchantNameRevenueSerializer.invalid_params, status: 400
+  end
+
+  def render_invalid_revenue_params
+    render json: RevenueSerializer.invalid_params, status: 400
+  end 
 end

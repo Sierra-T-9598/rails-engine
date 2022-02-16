@@ -251,7 +251,7 @@ RSpec.describe "Items API" do
       it 'returns a 404 status error if the item is not found' do
         get api_v1_item_merchant_index_path(1)
         result = JSON.parse(response.body, symbolize_names: true)
-
+      
         expect(response.status).to eq(404)
         expect(result).to have_key(:error)
         expect(result[:error][:exception]).to eq("Couldn't find Item with 'id'=1")

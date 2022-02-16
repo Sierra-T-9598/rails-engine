@@ -15,4 +15,23 @@ class Merchant < ApplicationRecord
     .order(:name)
     .first
   end
+
+  def self.top_merchants_by_revenue(quantity)
+    joins(invoices: [:invoice_items, :transactions])
+    .where(transactions: {result: 'success'}, invoices: {status: 'shipped'})
+    .select('SUM(invoice_items.unit_price * invoice_items.quantity) AS total_revenue, merchants.*')
+    .group(:id)
+    .order(total_revenue: :desc)
+    .limit(quantity)
+    .distinct
+  end
+
+  def self.top_merchants_by_items_sold(quantity = 5)
+    joins(invoices: [:invoice_items, :transactions])
+    .where(transactions: {result: 'success'}, invoices: {status: 'shipped'})
+    .select('SUM(invoice_items.quantity) AS item_count, merchants.*')
+    .group(:id)
+    .order(item_count: :desc)
+    .limit(quantity)
+  end
 end

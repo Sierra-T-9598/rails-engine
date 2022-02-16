@@ -19,9 +19,14 @@ RSpec.describe Merchant do
         merchant_1 = Merchant.create!(name: 'Burger Bobs')
         merchant_2 = Merchant.create!(name: "Alfie's Burger Shack")
         query = 'Burger'
-        
+
         expect(Merchant.find_merchant_by_name(query)).to eq(merchant_2)
       end
     end
+
+    # describe '::top_merchants_by_revenue(quantity)' do
+    #   it 'returns the specified number of merchants ordered by total revenue' do
+    #   end
+    # end
   end
 end

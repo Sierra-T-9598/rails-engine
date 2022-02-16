@@ -22,3 +22,4 @@ class Api::V1::ItemsSearchController < ApplicationController
     end
   end
 end
+# private methods 
